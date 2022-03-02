@@ -47,7 +47,7 @@ const updateTask = asyncHandler(async (req, res) => {
   } 
 
   // Check for task owner
-  if (global.user.toString() !== user.id) {
+  if (task.user.toString() !== user.id) {
     res.status(401)
     throw new Error('User not authorized')
   }
@@ -75,7 +75,7 @@ const deleteTask = asyncHandler(async (req, res) => {
   } 
 
   // Check for task owner
-  if (global.user.toString() !== user.id) {
+  if (task.user.toString() !== user.id) {
     res.status(401)
     throw new Error('User not authorized')
   }
