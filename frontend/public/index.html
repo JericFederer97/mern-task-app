@@ -34,6 +34,32 @@
     <!-- End Google Tag Manager -->
   </head>
   <body>
+    <!-- Styling for consent pop up -->
+    <style>
+      #consent-popup {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2rem 8rem;
+        background-color: #030303;
+        transition: opacity 1s ease;
+        color: white;
+      }
+      #consent-popup a {
+        color: black;
+        text-decoration: none;
+      }
+      #consent-popup button {
+        padding: 0.5rem 1rem;
+        margin: 0 1rem;
+        background-color: #26f7b1;
+      }
+      #consent-popup.hidden {
+        opacity: 0;
+      }
+    </style>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WC5WRM4"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -51,6 +77,52 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <div id="consent-popup" class="hidden">
+      <h3>JERIC COOKIES CONSENT TEST</h3>
+      <h3>Click <button><a id="accept" href="#">Here</a></button> to enable cookies.</h3>
+    </div>
+
+    <script>
+      // For cookie storage
+      const cookieStorage = {
+          getItem: (item) => {
+              const cookies = document.cookie
+                  .split(';')
+                  .map(cookie => cookie.split('='))
+                  .reduce((acc, [key, value]) => ({ ...acc, [key.trim()]: value }), {});
+              return cookies[item];
+          },
+          setItem: (item, value) => {
+              expiration = new Date(2023, 3, 24) // 2023/04/24
+              document.cookie = `${item}=${value}; expires=${expiration}`
+          }
+      }
+
+      // For you cookie storage you can use, local, session, or cookies
+      // const storageType = localStorage;
+      // const storageType = sessionStorage;
+      const storageType = cookieStorage;
+
+      const consentTitle = 'cookies_consent_test';
+      const showCookiePopup = () => !storageType.getItem(consentTitle);
+      const saveToStorage = () => storageType.setItem(consentTitle, true);
+
+      window.onload = () => {
+          const acceptCookieFunc = event => {
+              saveToStorage(storageType);
+              consentPopup.classList.add('hidden');
+          }
+          const consentPopup = document.getElementById('consent-popup');
+          const acceptButton = document.getElementById('accept');
+          acceptButton.addEventListener('click', acceptCookieFunc);
+
+          if (showCookiePopup(storageType)) {
+              setTimeout(() => {
+                  consentPopup.classList.remove('hidden');
+              }, 1000);
+          }
+      };
+    </script>
 
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-62a7e93949d43cb0"></script>
